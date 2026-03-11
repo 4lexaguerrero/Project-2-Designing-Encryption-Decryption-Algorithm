@@ -3,6 +3,7 @@
 #include <string>
 #include <algorithm>
 #include <cctype>
+#include <limits>
 
 using namespace std;
 
@@ -12,21 +13,37 @@ void encryptFile(string inputFileName, string outputFileName, int key);
 void decryptFile(string inputFileName, string outputFileName, int key);
 
 int main() {
-    int choice;
+    int choice = 0;
     string inputFile, outputFile;
-    int key;
+    int key = 0;
 
     cout << "1. Encrypt a file?\n";
     cout << "2. Decrypt a file?\n";
     cout << "Enter your choice: ";
-    cin >> choice;
+    if (!(cin >> choice)) {
+        cerr << "Invalid menu input. Please enter 1 or 2." << endl;
+        return 1;
+    }
+
+    if (choice != 1 && choice != 2) {
+        cerr << "Invalid choice. Please enter 1 (encrypt) or 2 (decrypt)." << endl;
+        return 1;
+    }
 
     cout << "Enter the input file name: ";
     cin >> inputFile;
     cout << "Enter the output file name: ";
     cin >> outputFile;
     cout << "Enter the encryption/decryption key (integer): ";
-    cin >> key;
+    if (!(cin >> key)) {
+        cerr << "Invalid key input. Please enter an integer key." << endl;
+        return 1;
+    }
+
+    if (inputFile.empty() || outputFile.empty()) {
+        cerr << "Input and output file names cannot be empty." << endl;
+        return 1;
+    }
 
     if (choice == 1) {
         encryptFile(inputFile, outputFile, key);
@@ -101,7 +118,7 @@ void encryptFile(string inputFileName, string outputFileName, int key) {
     string line;
 
     if (!inputFile.is_open() || !outputFile.is_open()) {
-        cout << "Error opening file!" << endl;
+        cerr << "Error opening input or output file for encryption." << endl;
         return;
     }
 
@@ -119,7 +136,7 @@ void decryptFile(string inputFileName, string outputFileName, int key) {
     string line;
 
     if (!inputFile.is_open() || !outputFile.is_open()) {
-        cout << "Error opening file!" << endl;
+        cerr << "Error opening input or output file for decryption." << endl;
         return;
     }
 
